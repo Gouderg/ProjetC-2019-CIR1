@@ -1,0 +1,21 @@
+Bareme
+
+make: 1 
+
+Execution: 7
+	-carte 1: 1
+	-carte 2: 1
+	-carte 3: 2
+	-graphique: 2
+	-autres: 1
+
+Qualité du code: 9
+	-Lisibilité: 2
+	-Simplicité/efficacité: 3
+	-Bonnes pratiques + respect du cahier des charges: 3
+	-Inventivité: 1
+
+Bonus: 1
+
+
+Note total sur 21 point
