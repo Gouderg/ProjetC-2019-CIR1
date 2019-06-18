@@ -19,93 +19,136 @@ Robot findDepart(Carte carte) {
 	}
 }
 
-Robot remiseNiveau(Robot robot) {
 
-	if (robot.direction == -4 || robot.direction == 4) robot.direction = 0;
-	return robot;
-}
+Robot avancer(Robot robot, Carte carte) {
 
+	robot.visiter = 1;
+	robot = check360(robot, carte);
 
-Robot avancer(Robot robot) {
+	if (robot.nord == 0) robot.y -= 1; //Vers le haut
+	else if (robot.est == 0) robot.x += 1;  //Vers la droite
+	else if (robot.sud == 0) robot.y += 1;  //Vers le bas
+	else if (robot.ouest == 0) robot.x -= 1;//Vers la gauche
+	
 
-
-	if (robot.direction == -4 || robot.direction == 0) robot.y -= 1;
-	if (robot.direction == -1 || robot.direction == 3) robot.x += 1;
-	if (robot.direction == -2 || robot.direction == 2) robot.y += 1;
-	if (robot.direction == -3 || robot.direction == 1) robot.x -= 1;
+	robot.direction = 0;
+	robot.nbPas ++;
 		
 	return robot;	
 }
 
-Robot droite(Robot robot) {
+Robot tourne90(Robot robot) {
 
 	robot.direction -= 1;
 
 	return robot;
 }
 
-Robot gauche(Robot robot) {
-
-	robot.direction += 1;
-
-	return robot;
-}
-
-char detectSortie(Robot robot, Carte carte) {
-
-	char caracTemp;
-
-	robot = gauche(robot);
-
-	if ((caracTemp = capteurAvant(robot, carte)) == 'S')
-	{
-		printf("La sortie est trouvée\n");
-		exit(1);
-	} else {
-		robot = droite(robot);
-	}
-
-	return caracTemp;
-}
-
-char capteurAvant(Robot robot, Carte carte) {
+char capteurAvantMur(Robot robot, Carte carte) {
 
 	char caracTemp;
 	int ligne = robot.x;
 	int colonne = robot.y;
+	if (robot.direction == 0) caracTemp = carte.tabCarte[colonne - 1][ligne];  //Nord +1 case
+	if (robot.direction == -1) caracTemp = carte.tabCarte[colonne][ligne + 1]; //Est +1 case
+	if (robot.direction == -2) caracTemp = carte.tabCarte[colonne + 1][ligne]; //Sud +1 case
+	if (robot.direction == -3) caracTemp = carte.tabCarte[colonne][ligne - 1]; //Ouest +1 case
 
-	if (robot.direction == 0) caracTemp = carte.tabCarte[colonne - 1][ligne];
-	if (robot.direction == -1 || robot.direction == 3) caracTemp = carte.tabCarte[colonne][ligne + 1];
-	if (robot.direction == -2 || robot.direction == 2) caracTemp = carte.tabCarte[colonne + 1][ligne];
-	if (robot.direction == -3 || robot.direction == 1) caracTemp = carte.tabCarte[colonne][ligne - 1];
-
+	printf("%c", caracTemp);
 	return caracTemp;
 }
 
-void deplacement(Robot robot, Carte carte) {
+int capteurAvantVisiter(Robot robot) {
 
-	char caractereFinal, caracSortie;
+	Robot robotTemp = robot;
+	int etat = 0;
 
-	do{
+	if (robot.direction == 0)//Nord +1 case
+	{
+		robotTemp.y -= 1;
+		etat = (robotTemp.visiter == 1) ? 1 : 0;
+	}
 
-		robot = avancer(robot);
-		caractereFinal = capteurAvant(robot, carte);
-		caracSortie = detectSortie(robot, carte);
-		if (caractereFinal == 'x')
-		{
-			robot = droite(robot);
-		}
+	if (robot.direction == -1)//Est +1 case
+	{
+		robotTemp.x += 1;
+		etat = (robotTemp.visiter == 1) ? 1 : 0;
+	}
 
-		if (caractereFinal == ' ' && caracSortie == ' ')
-		{
-			robot = gauche(robot);
-		}
-		caracSortie = detectSortie(robot, carte);
-		actualisationCarte(carte, robot);
-		printf("%c\n", caractereFinal);
+	if (robot.direction == -2)//Sud +1 case
+	{
+		robotTemp.y += 1;
+		etat = (robotTemp.visiter == 1) ? 1 : 0;
+	}
+
+	if (robot.direction == -3)//Ouest +1 case
+	{
+		robotTemp.x -= 1;
+		etat = (robotTemp.visiter == 1) ? 1 : 0;
+	}
+
+	printf(",etat %d\n", etat);
+	return etat;
+}
+
+Robot check360(Robot robot, Carte carte) {
+
+	char caracTemp;
+	int etatTemp = 0;
 
 
-	}while(caractereFinal != 'S');
+	caracTemp = capteurAvantMur(robot, carte);
+	etatTemp = capteurAvantVisiter(robot);
+	if (caracTemp == 'S') robot.sortie = 1;
+	else if (caracTemp == ' ' || etatTemp == 1) robot.nord = 0;
+	else if (caracTemp == 'x' || etatTemp == 0) robot.nord = 1;
+	printf("robot.nord: %d\n\n", robot.nord);
+	robot = tourne90(robot);
+	etatTemp = 0;
+
+	caracTemp = capteurAvantMur(robot, carte);
+	etatTemp = capteurAvantVisiter(robot);
+	if (caracTemp == 'S') robot.sortie = 1;
+	else if (caracTemp == ' ' || etatTemp == 1) robot.est = 0;
+	else if (caracTemp == 'x' || etatTemp == 0) robot.est = 1;
+	printf("robot.est: %d\n\n", robot.est);
+	robot = tourne90(robot);
+	etatTemp = 0;
+
+	caracTemp = capteurAvantMur(robot, carte);
+	etatTemp = capteurAvantVisiter(robot);
+	if (caracTemp == 'S') robot.sortie = 1;
+	else if (caracTemp == ' ' || etatTemp == 1) robot.sud = 0;
+	else if (caracTemp == 'x' || etatTemp == 0) robot.sud = 1;
+	printf("robot.sud: %d\n\n", robot.sud);
+	robot = tourne90(robot);
+	etatTemp = 0;
+
+	caracTemp = capteurAvantMur(robot, carte);
+	etatTemp = capteurAvantVisiter(robot);
+	if (caracTemp == 'S') robot.sortie = 1;
+	else if (caracTemp == ' ' || etatTemp == 1) robot.ouest = 0;
+	else if (caracTemp == 'x' || etatTemp == 0) robot.ouest = 1;
+	printf("robot.ouest: %d\n\n", robot.ouest);
+
+	return robot;
+}
+
+int deplacement(Robot robot, Carte carte) {
+
+	
+		
+	robot = avancer(robot, carte);
+
+	carte.robotX = robot.x;
+	carte.robotY = robot.y;
+	actualisationCarte(carte, robot);
+	if (robot.sortie == 0) deplacement(robot, carte);
+
+	return 0;
+
+	//else if go back
+
 
 
 }

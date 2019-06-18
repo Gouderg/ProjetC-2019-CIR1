@@ -58,8 +58,6 @@ void affichCarte(Carte carte, Robot robot) {
 		}
 		printf("\n");
 	}
-
-	//printf("Robot x: %d, y: %d\n", robot.x, robot.y);
 }
 
 void actualisationCarte(Carte carte, Robot robot) {
@@ -67,7 +65,10 @@ void actualisationCarte(Carte carte, Robot robot) {
 	
 	int ligne = robot.x;
 	int colonne = robot.y;
+
+	//printf("robotX: %d, robotY: %d\n", carte.robotX, carte.robotY);
 	
+	carte.tabCarte[carte.robotY][carte.robotX] = '.';
 	carte.tabCarte[colonne][ligne] = 'R';
 
 	affichCarte(carte, robot);

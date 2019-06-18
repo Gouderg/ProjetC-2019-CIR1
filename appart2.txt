@@ -1,0 +1,29 @@
+50:28
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+x                                               x
+x                                               x
+x            xxxxxxxxxxx                        x
+x            x         x                        x
+x            x         x                        x
+x            xxxxxxxxxxx                        x
+x                             xxxxxxxxxxxxxxxxxxx
+xxxxxxxxxxxxxxxxxxxxxxxxxxxx                    x
+x                                               x
+x                                               x
+x     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx      x
+x     x                                  x      x
+x     x                                  x      x
+x     x                                  x      x
+x     x                                  x      x
+x     x                                  x      x 
+x     xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx      x
+x                                               x
+x                                               x
+x xxxxxxx                             xxxxxxxx  x
+x x     x                             x      x  x
+x x     x                             x      x  x
+x xxxxxxx                             xxxxxxxx  x
+x                                               x
+x      D                                        x
+x                                               x
+xxxxxxxxxxxxxxxxxxxxxxxxxxxxSxxxxxxxxxxxxxxxxxxxx
