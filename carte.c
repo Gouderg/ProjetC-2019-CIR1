@@ -48,8 +48,10 @@ Carte initCarte(const char *nomFichier) {
 	return carteRecup;
 }
 
-void affichCarte(Carte carte, Robot robot) {
+void affichCarte(Carte carte) {
 
+	//printf("\x1b[2J");
+	//getchar();
 	for (int i = 0; i < carte.hauteur; ++i)
 	{
 		for (int j = 0; j < carte.largeur; ++j)
@@ -58,19 +60,20 @@ void affichCarte(Carte carte, Robot robot) {
 		}
 		printf("\n");
 	}
-}
 
-void actualisationCarte(Carte carte, Robot robot) {
 
 	
-	int ligne = robot.x;
-	int colonne = robot.y;
+}
 
-	//printf("robotX: %d, robotY: %d\n", carte.robotX, carte.robotY);
+void actualisationCarte(Carte carte, Robot *robot) {
+
+	
+	int ligne = robot -> x;
+	int colonne = robot -> y;
 	
 	carte.tabCarte[carte.robotY][carte.robotX] = '.';
 	carte.tabCarte[colonne][ligne] = 'R';
 
-	affichCarte(carte, robot);
+	affichCarte(carte);
 
 }
