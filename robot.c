@@ -1,5 +1,25 @@
 #include "fonction.h"
 
+void initCarteRobotMentale(Robot *robot, Carte carte) {
+
+	//Allocation dynamique de la mémoire
+	robot -> tabVisiter = (int**) malloc(carte.hauteur * sizeof(int *));
+	for (int i = 0; i < carte.hauteur; ++i) {
+
+		robot -> tabVisiter[i] = (int *) malloc((carte.largeur + 2) * sizeof(int));
+	}
+
+	//Initialisation de toute les cases à 0
+	for (int i = 0; i < carte.hauteur; ++i)
+	{
+		for (int j = 0; j < carte.largeur; ++j)
+		{
+			robot -> tabVisiter[i][j] = 0;
+		}
+	}
+
+}
+
 void findDepart(Carte carte, Robot *robot) {
 
 	char caracTemp;
@@ -11,73 +31,51 @@ void findDepart(Carte carte, Robot *robot) {
 			if (caracTemp == 'D') {
 				robot -> x = j;
 				robot -> y = i;
-				printf("xDebut: %d, yDebut: %d\n", j,i);
 				carte.xInit = j;
 				carte.yInit = i;
 			}
 		}
 	}
+	
 }
 
-
-void tourne90(Robot *robot) {
-
-	robot -> direction -= 1;
-
-}
-
-char capteurAvantMur(Robot *robot, Carte carte) {
+char capteurAvantMur(Robot robot, Carte carte) {
 
 	char caracTemp;
-	int ligne = robot -> x;
-	int colonne = robot -> y;
+	int ligne = robot.x;
+	int colonne = robot.y;
 
-	printf("Colonne: %d, Ligne: %d \n", robot -> x, robot -> y);
-
-	if (robot -> direction == NORD) caracTemp = carte.tabCarte[colonne - 1][ligne];  //Nord +1 case
-	if (robot -> direction == EST) caracTemp = carte.tabCarte[colonne][ligne + 1]; //Est +1 case
-	if (robot -> direction == SUD) caracTemp = carte.tabCarte[colonne + 1][ligne]; //Sud +1 case
-	if (robot -> direction == OUEST) caracTemp = carte.tabCarte[colonne][ligne - 1]; //Ouest +1 case
+	if (robot.sens == NORD) caracTemp = carte.tabCarte[colonne - 1][ligne];  //Nord +1 case
+	if (robot.sens == EST) caracTemp = carte.tabCarte[colonne][ligne + 1]; //Est +1 case
+	if (robot.sens == SUD) caracTemp = carte.tabCarte[colonne + 1][ligne]; //Sud +1 case
+	if (robot.sens == OUEST) caracTemp = carte.tabCarte[colonne][ligne - 1]; //Ouest +1 case
 
 	return caracTemp;
 }
 
-int capteurAvantVisiter(Robot *robot) {
-
-	Robot robotTemp = *robot;
+int capteurAvantVisiter(Robot robot) {
 
 	int visiterPlus1 = 0;
+	int ligne = robot.x;
+	int colonne = robot.y;
 
-	if (robot -> direction == NORD) { //Nord +1 case
-	
-		robotTemp.y -= 1;
-		visiterPlus1 = (robotTemp.visiter == 0) ? 0 : 1;
-	}
+	if (robot.sens == NORD) visiterPlus1 = robot.tabVisiter[colonne - 1][ligne];
+	if (robot.sens == EST) visiterPlus1 = robot.tabVisiter[colonne][ligne + 1];
+	if (robot.sens == SUD) visiterPlus1 = robot.tabVisiter[colonne + 1][ligne];
+	if (robot.sens == OUEST) visiterPlus1 = robot.tabVisiter[colonne][ligne - 1];
 
-	if (robot -> direction == EST) { //Est +1 case
-	
-		robotTemp.x += 1;
-		visiterPlus1 = (robotTemp.visiter == 0) ? 0 : 1;
-	}
-
-	if (robot -> direction == SUD) { //Sud +1 case
-	
-		robotTemp.y += 1;
-		visiterPlus1 = (robotTemp.visiter == 0) ? 0 : 1;
-	}
-
-	if (robot -> direction == OUEST) { //Ouest +1 case
-	
-		robotTemp.x-= 1;
-		visiterPlus1 = (robotTemp.visiter == 0) ? 0 : 1;
-	}
-
+	printf("robot sens: %d\n", robot.sens);
 	return visiterPlus1;
 }
 
-int verification(char caracTemp, int visiterPlus1, Robot *robot) {
+int verification(Robot *robot, Carte carte) {
 
-	int retour = 0;
+	int retour = 0, visiterPlus1 = 0;
+	char caracTemp;
+
+	visiterPlus1 = capteurAvantVisiter(*robot);
+	caracTemp = capteurAvantMur(*robot, carte);
+	//printf("Caractere: %c, visiter devant: %d\n\n", caracTemp, visiterPlus1);
 
 	switch(caracTemp) {
 
@@ -99,117 +97,143 @@ int verification(char caracTemp, int visiterPlus1, Robot *robot) {
 	return retour;
 }
 
-void check360(Robot *robot, Carte carte) {
-
-	char caracTemp;
-	int visiterPlus1 = 0;
-	robot -> direction = 0;
-
-	//Nord
-	caracTemp = capteurAvantMur(robot, carte);
-	visiterPlus1 = capteurAvantVisiter(robot);
-	robot -> nord = verification(caracTemp, visiterPlus1, robot);
-	printf("visiterPlus1: %d, caracTemp: %c\n", visiterPlus1, caracTemp);
-	printf("robot.nord: %d\n\n", robot -> nord);
-	tourne90(robot);
-	visiterPlus1 = 0;
-
-	//Est
-	caracTemp = capteurAvantMur(robot, carte);
-	visiterPlus1 = capteurAvantVisiter(robot);
-	printf("visiterPlus1: %d, caracTemp: %c\n", visiterPlus1, caracTemp);
-	robot -> est = verification(caracTemp, visiterPlus1, robot);
-	printf("robot.est: %d\n\n", robot -> est);
-	tourne90(robot);
-	visiterPlus1 = 0;
-
-	//Sud
-	caracTemp = capteurAvantMur(robot, carte);
-	visiterPlus1 = capteurAvantVisiter(robot);
-	printf("visiterPlus1: %d, caracTemp: %c\n", visiterPlus1, caracTemp);
-	robot -> sud = verification(caracTemp, visiterPlus1, robot);
-	printf("robot.sud: %d\n\n", robot -> sud);
-	tourne90(robot);
-	visiterPlus1 = 0;
-
-	//Ouest
-	caracTemp = capteurAvantMur(robot, carte);
-	visiterPlus1 = capteurAvantVisiter(robot);
-	printf("visiterPlus1: %d, caracTemp: %c\n", visiterPlus1, caracTemp);
-	robot -> ouest = verification(caracTemp, visiterPlus1, robot);
-	printf("robot.ouest: %d\n\n", robot -> ouest);
-
-}
 
 void avancer(Robot *robot, Carte carte) {
 
 	carte.robotX = robot -> x;
 	carte.robotY = robot -> y;
 
-	if (robot -> nord == 0) robot -> y -= 1;      //Vers le haut
-	else if (robot -> est == 0) robot -> x += 1;  //Vers la droite
-	else if (robot -> sud == 0) robot -> y += 1;  //Vers le bas
-	else if (robot -> ouest == 0) robot -> x -= 1;//Vers la gauche
+
+	if (robot -> sens == NORD) robot -> y -= 1;      //Vers le haut
+	if (robot -> sens == EST) robot -> x += 1;  	//Vers la droite
+	if (robot -> sens == SUD) robot -> y += 1;  	//Vers le bas
+	if (robot -> sens == OUEST) robot -> x -= 1;	//Vers la gauche
 	
 	
 	actualisationCarte(carte, robot);
+	printf("x: %d, y: %d\n", robot -> x, robot -> y);
 	robot -> nbPas ++;
+}
+
+void marquerCase(Robot *robot, Carte carte) {
+
+	robot -> tabVisiter[robot -> y][robot -> x] = 1;
+	/*for (int i = 0; i < carte.hauteur; ++i)
+	{
+		for (int j = 0; j < carte.largeur; ++j)
+		{
+			printf("%d", robot -> tabVisiter[i][j]);
+		}
+		printf("\n");
+	}*/
+}
+
+void tourner90(Robot *robot) {
+
+	robot -> sens = (robot -> sens + 1) % 4;
+}
+
+int searchS(Robot robot, Carte carte) {
+
+	Robot robotTemp = robot;
+
+	char retourTemp = 0;
+	int sortie = 0;
+	robotTemp.sens = 0;
+
+	for (int i = 0; i < 4; ++i)	{
+
+		robotTemp.sens = i;
+		retourTemp = capteurAvantMur(robotTemp, carte);
+		//printf("retourTemp n°%d: %c\n", i, retourTemp);
+		if (retourTemp == 'S') {
+			
+			sortie = 1;
+			break;
+		}
+
+	}
+	return sortie;
+}
+
+int goBackSearch(Robot *robot, Carte carte) {
+
+	Robot robotTemp = *robot;
+
+	char retourTemp = 0;
+	int sortie = 1;
+	robotTemp.sens = 0;
+
+	for (int i = 0; i < 4; ++i)	{
+
+		robotTemp.sens = i;
+		retourTemp = capteurAvantMur(robotTemp, carte);
+		printf("retourTemp n°%d: %c\n", i, retourTemp);
+		if (retourTemp == ' ') {
+			
+			sortie = 0;
+			robot -> sens = robotTemp.sens;
+			break;
+		}
+
+	}
+	return sortie;
 }
 
 int depthFirstSearch(Robot *robot, Carte carte) {
 
-	robot -> visiter = 0;
-	check360(robot, carte);
+	int retour = 0, impossible = 0;
+	robot -> sens = 0; //Remise au Nord
+	marquerCase(robot, carte);
+
+	for (int i = 0; i < 4; ++i) {
+
+		robot -> sortie = searchS(*robot, carte);
+		retour = verification(robot, carte);
+		if (robot -> sortie == 1) return 0;
+		if(retour == 0 && robot -> sortie == 0) {
+
+			robot -> lastSens = robot -> sens;
+			avancer(robot, carte);
+			depthFirstSearch(robot, carte);
+		} else {
+			tourner90(robot);
+			impossible ++;
+			printf("impossible: %d\n", impossible);
+		}
+		if (impossible == 4){
+			while (retour != 0) {
+				printf("GO backkkkkkk\n");
+				robot -> sens =  robot -> lastSens;
+				
+				tourner90(robot);
+				tourner90(robot);
+				
+				printf("robot.lastSens: %d\n", robot -> lastSens);
+				printf("robot.Sens: %d\n", robot -> sens);
+				avancer(robot, carte);
+				tourner90(robot);
+				tourner90(robot);
+				retour = goBackSearch(robot, carte);
+				impossible = 0;
+				printf("retour: %d\n", retour);
+
+			}
+			avancer(robot, carte);
+			printf("Nonnnnnnnn ne sors pas\n");
+		}
 
 	
-	if (robot -> nord == 0 && robot -> sortie == 0) {
-		
-		avancer(robot, carte);
-		depthFirstSearch(robot, carte);
+
 	}
 
-	if (robot -> est == 0 && robot -> sortie == 0) {
-		
-		avancer(robot, carte);
-		depthFirstSearch(robot, carte);
-	}
-
-	if (robot -> sud == 0 && robot -> sortie == 0) {
-		
-		avancer(robot, carte);
-		depthFirstSearch(robot, carte);
-	}
-
-	if (robot -> ouest == 0 && robot -> sortie == 0) {
-		
-		avancer(robot, carte);
-		depthFirstSearch(robot, carte);
-	}
-
-	if (robot -> sortie == 1) return 0;
-
-	if (robot -> nord == 1 && robot -> est == 1 && robot -> sud == 1 && robot -> ouest == 1) {
-		
-		tourne90(robot);
-		tourne90(robot);
-		while(robot -> nord == 1 && robot -> est == 1 && robot -> sud == 1 && robot -> ouest == 1) {
-
-			avancer(robot, carte);
-		}
-		return 1;
-	}
-
-	//printf("Zut, un cul de sac\n");
-	/*if (carte.xInit == robot -> x && carte.yInit == robot -> y) {
-		
-		printf("Ce labyrinthe n'a pas de sortie.\n");
-		return 1;
-	}*/
-
+	
 }
 
-int deplacement(Robot *robot, Carte carte) {
 
+
+int deplacement(Robot *robot, Carte carte) {
+	
 	depthFirstSearch(robot,carte);
 	
 	printf("Vous êtes sortie du labyrinthe\n");

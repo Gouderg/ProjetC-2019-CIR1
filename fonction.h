@@ -6,9 +6,9 @@
 #define TAILLE_MAX_LIGNE 200   //Taille maximale d'une ligne d'un fichier
 #define TAILLE_NOM 20          //Taille maximale du nom du fichier passé en argument
 #define NORD 0
-#define EST -1
-#define SUD -2
-#define OUEST -3
+#define EST 1
+#define SUD 2
+#define OUEST 3
 
 typedef struct Carte {
 	char **tabCarte;           //Carte stocké
@@ -17,14 +17,18 @@ typedef struct Carte {
 	int xInit, yInit;          //Coordonnées initiales du robot
 } Carte;
 
+typedef enum Orientation {
+	N, E, S, O
+} Orientation;
+
 typedef struct Robot {
 	int x, y;                  //Coordonées du robot avant implémentaion sur la carte
-	int nord, ouest, sud, est; //Rose des vents indiquant la présence de chemin possible (impossible:1, possible:0)
-	int visiter;               //Si la cellule est visité:1 ou non:0
+	Orientation sens;          
+	Orientation lastSens;       
 	int direction;             //Variable temporaire pour regarder tout autour du robot
 	long long nbPas;           //Nombre de pas effectué
 	int sortie;                //Variable utilisé pour sortir (1:réussite)
-	int *autrePossibilite;
+	int **tabVisiter;
 
 } Robot;
 
@@ -36,13 +40,16 @@ void actualisationCarte(Carte carte, Robot *robot);
 
 
 //Fonction Robot
+void initCarteRobotMentale(Robot *robot, Carte carte);
 void findDepart(Carte carte, Robot *robot);
 int deplacement(Robot *robot, Carte carte);
 void avancer(Robot *robot, Carte carte);
-void tourne90(Robot *robot);
-char capteurAvantMur(Robot *robot, Carte carte);
-int capteurAvantVisiter(Robot *robot);
-void check360(Robot *robot, Carte carte);
-int verification(char caracTemp, int visiterPlus1, Robot *robot);
-
+void marquerCase(Robot *robot, Carte carte);
+char capteurAvantMur(Robot robot, Carte carte);
+int capteurAvantVisiter(Robot robot);
+int verification(Robot *robot, Carte carte);
+int depthFirstSearch(Robot *robot, Carte carte);
+void tourner90(Robot *robot);
+int searchS(Robot robot, Carte carte);
+int goBackSearch(Robot *robot, Carte carte);
 

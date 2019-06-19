@@ -32,10 +32,10 @@ Carte initCarte(const char *nomFichier) {
 	carteRecup.largeur = atoi(ligne);
 	carteRecup.hauteur = atoi(ptr);
 
-	carteRecup.tabCarte = (char**) malloc(carteRecup.largeur * sizeof(char *));
-	for (int i = 0; i < carteRecup.largeur; ++i) {
+	carteRecup.tabCarte = (char**) malloc(carteRecup.hauteur * sizeof(char *));
+	for (int i = 0; i < carteRecup.hauteur; ++i) {
 
-		carteRecup.tabCarte[i] = (char *) malloc(carteRecup.hauteur * sizeof(int));
+		carteRecup.tabCarte[i] = (char *) malloc((carteRecup.largeur + 2) * sizeof(int));
 	}
 	
 	while(fgets(ligne, TAILLE_MAX_LIGNE, fichier)) {
@@ -50,8 +50,7 @@ Carte initCarte(const char *nomFichier) {
 
 void affichCarte(Carte carte) {
 
-	//printf("\x1b[2J");
-	//getchar();
+	getchar();
 	for (int i = 0; i < carte.hauteur; ++i)
 	{
 		for (int j = 0; j < carte.largeur; ++j)
@@ -60,6 +59,7 @@ void affichCarte(Carte carte) {
 		}
 		printf("\n");
 	}
+	//usleep(20000);
 
 
 	
@@ -75,5 +75,4 @@ void actualisationCarte(Carte carte, Robot *robot) {
 	carte.tabCarte[colonne][ligne] = 'R';
 
 	affichCarte(carte);
-
 }
