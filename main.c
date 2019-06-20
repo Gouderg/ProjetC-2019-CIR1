@@ -23,6 +23,6 @@ int main(int argc, char const *argv[])
 	//Mise en marche du programme
 	menu(robot, carte, graph);
 
-	SDL_Quit();
+	
 	return 0;
 }

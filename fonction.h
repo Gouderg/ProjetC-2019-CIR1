@@ -8,7 +8,7 @@
 
 #define TAILLE_MAX_LIGNE 200     //Taille maximale d'une ligne de notre .txt
 #define TAILLE_NOM 20            //Taille maximale du nom du .txt
-#define TAILLE_PIXEL 15
+#define TAILLE_PIXEL 15			 //Taille d'un carreau sur l'écran graphique
 #define NORD 0					 
 #define EST 1
 #define SUD 2
@@ -28,9 +28,10 @@ typedef struct Robot {
 	int compteurPledge;          //Compteur de Pledge comptant les changements de direction
 } Robot;
 
+//Structure ayant gérant les graphismes
 typedef struct Graph {
-	SDL_Surface *ecran;
-	SDL_Surface *sortie;
+	SDL_Surface *ecran;          
+	SDL_Surface *sortie;		 
 	SDL_Surface *mur;
 	SDL_Surface *robot;
 	SDL_Surface *trace;
@@ -53,6 +54,7 @@ void avancer(Robot *robot, Carte carte, Graph graph, int choix1);
 void droite(Robot *robot);
 void gauche(Robot *robot);
 
+
 //Fonction graphique
 void menu(Robot robot, Carte carte, Graph graph);
 void sousMenu(Robot robot, Carte carte, Graph graph, int choix1, int choix2);
@@ -62,3 +64,4 @@ void murGraph(int x, int y, Graph graph);
 void sortieGraph(int x, int y, Graph graph);
 void traceGraph(int x, int y, Graph graph);
 void murGraph(int x, int y, Graph graph);
+void adieu (Robot robot);

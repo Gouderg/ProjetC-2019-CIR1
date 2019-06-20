@@ -77,7 +77,7 @@ Carte initCarte(const char *nomFichier) {
 /*!==============================================!*/
 /*! Fonction: affichCarte                        !*/
 /*! Rôle: Parcours la carte intégralement        !*/
-/*!       Laisse un délai de 0.5 seconde         !*/
+/*!       Laisse un délai de 0.1 seconde         !*/
 /*! Paramètres:                                  !*/
 /*!			E: struct Carte, struct Robot        !*/  
 /*!			S: N/A                               !*/
@@ -93,24 +93,26 @@ void affichCarte(Carte carte, Robot robot) {
 		}
 		printf("\n");
 	}
-	//Délai de 0.2 seconde
+	//Délai de 0.1 seconde
 	usleep(10000);
 }
 
-/*!===================================================!*/
-/*! Fonction: actualisationCarte                      !*/
-/*! Rôle: Remplace la dernière position de R par un . !*/
-/*!       Appel la fonction affichCarte               !*/
-/*! Paramètres:                                       !*/
-/*!			E: struct Carte, struct Robot             !*/  
-/*!			S: N/A                                    !*/
-/*! Retour: void                                      !*/
-/*!===================================================!*/
+/*!==========================================================!*/
+/*! Fonction: actualisationCarte                             !*/
+/*! Rôle: Remplace la dernière position de R par un .        !*/
+/*!       Choix entre le mode graphique et le mode terminal  !*/
+/*! Paramètres:                                              !*/
+/*!			E: struct Carte, struct Robot, struct Graph, int !*/  
+/*!			S: N/A                                           !*/
+/*! Retour: void                                             !*/
+/*!==========================================================!*/
 void actualisationCarte(Carte carte, Robot robot, Graph graph, int choix1) {
 	
 	//On remplace l'ancien R par un . et affecte le nouveau R
 	carte.tabCarte[carte.robotY][carte.robotX] = '.';
 	carte.tabCarte[robot.y][robot.x] = 'R';
+
+	system("clear");
 
 	if(choix1 == 1) affichCarte(carte, robot);
 	else if(choix1 == 2) affichageGraph(robot, carte, graph);

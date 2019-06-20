@@ -69,15 +69,14 @@ char detecteCote(Robot *robot,  Carte carte) {
 	return caracCote;
 }
 
-/*!================================================!*/
-/*! Fonction: avancer                              !*/
-/*! Rôle: Avancer de une case en fonction de       !*/
-/*!       l'orientation du robot                   !*/
-/*! Paramètres:                                    !*/
-/*!			E: struct *Robot, struct Carte         !*/  
-/*!			S: struct *Robot                       !*/
-/*! Retour: void                                   !*/
-/*!================================================!*/
+/*!=================================================================!*/
+/*! Fonction: avancer                                               !*/
+/*! Rôle: Avancer de une case en fonction de l'orientation du robot !*/ 
+/*! Paramètres:                                                     !*/
+/*!			E: struct *Robot, struct Carte, struct Graph, int       !*/  
+/*!			S: struct *Robot                                        !*/
+/*! Retour: void                                                    !*/
+/*!=================================================================!*/
 void avancer(Robot *robot, Carte carte, Graph graph, int choix1) {
 
 	//On ramène la direction à une valeur positive compris entre 0 et 3
@@ -124,14 +123,14 @@ void gauche(Robot *robot) {
 	robot -> compteurPledge --;
 }
 
-/*!===================================================!*/
-/*! Fonction: deplacement                             !*/
-/*! Rôle: Algorithme permettant de trouver la sortie  !*/
-/*! Paramètres:                                       !*/
-/*!			E: struct *Robot, struct Carte            !*/  
-/*!			S: struct *Robot                          !*/
-/*! Retour: int                                      !*/
-/*!===================================================!*/
+/*!============================================================!*/
+/*! Fonction: deplacement                                      !*/
+/*! Rôle: Algorithme permettant de trouver la sortie           !*/
+/*! Paramètres:                                                !*/
+/*!			E: struct *Robot, struct Carte , struct Graph, int !*/  
+/*!			S: struct *Robot                                   !*/
+/*! Retour: int                                                !*/
+/*!============================================================!*/
 int deplacement(Robot *robot, Carte carte, Graph graph, int choix1) {
 
 	char caracDevant, caracCote;
@@ -168,8 +167,6 @@ int deplacement(Robot *robot, Carte carte, Graph graph, int choix1) {
 			droite(robot);
 			avancer(robot, carte, graph, choix1);
 		}
-
-
 
 	}while(robot -> compteurPledge != 0);
 	//On le fais tant que le compteur n'est pas revenu à 0

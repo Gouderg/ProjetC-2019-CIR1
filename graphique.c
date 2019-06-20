@@ -1,5 +1,14 @@
 #include "fonction.h"
 
+/*!=====================================================!*/
+/*! Fonction: menu                                      !*/
+/*! Rôle: Afficher un menu                              !*/
+/*!       Trier le premier choix                        !*/
+/*! Paramètres:                                         !*/
+/*!			E: struct Carte, struct Robot, struct Graph !*/  
+/*!			S: N/A                                      !*/
+/*! Retour: void                                        !*/
+/*!=====================================================!*/
 void menu(Robot robot, Carte carte, Graph graph) {
 
 	int choix1 = 0, choix2 = 0;
@@ -43,6 +52,15 @@ void menu(Robot robot, Carte carte, Graph graph) {
 	}
 }
 
+/*!===============================================================!*/
+/*! Fonction: sousMenu                                            !*/
+/*! Rôle: Trier le deuxième choix du menu                         !*/
+/*!       Lancer l'algorithme                                     !*/
+/*! Paramètres:                                                   !*/
+/*!			E: struct Carte, struct Robot, struct Graph, int, int !*/  
+/*!			S: N/A                                                !*/
+/*! Retour: void                                                  !*/
+/*!===============================================================!*/
 void sousMenu(Robot robot, Carte carte, Graph graph, int choix1, int choix2) {
 
 	int fin = 0;
@@ -62,9 +80,17 @@ void sousMenu(Robot robot, Carte carte, Graph graph, int choix1, int choix2) {
 			break;
 	}
 
-	if(fin == 1) printf("Bien jouer vous êtes sortis du labyrinthe en %lld pas\n", robot.nbPas);
+	if(fin == 1) adieu(robot);
 }
 
+/*!====================================!*/
+/*! Fonction: initGraph                !*/
+/*! Rôle: Charge les images et l'écran !*/
+/*! Paramètres:                        !*/
+/*!			E: struct Carte            !*/  
+/*!			S: N/A                     !*/
+/*! Retour: struct Graph               !*/
+/*!====================================!*/
 Graph initGraph(Carte carteGraphique) {
 
 	Graph graph;
@@ -94,17 +120,35 @@ Graph initGraph(Carte carteGraphique) {
 	SDL_Flip(graph.ecran);
 	return graph;
 }
-
+/*!====================================!*/
+/*! Fonction: murGraph                 !*/
+/*! Rôle: Affiche la texture du mur    !*/
+/*! Paramètres:                        !*/
+/*!			E: int, int, struct Graph   !*/  
+/*!			S: N/A                     !*/
+/*! Retour: void                       !*/
+/*!====================================!*/
 void murGraph(int x, int y, Graph graph) {
 
+	//On crée un rectangle
 	SDL_Rect mur;
 
+	//On lui affecte sa position sur la carte en fonction de nos entrées
 	mur.x = x * TAILLE_PIXEL;
 	mur.y = y * TAILLE_PIXEL;
 
+	//On appose notre nouvelle texture par dessus l'écran
 	SDL_BlitSurface(graph.mur, NULL, graph.ecran, &mur);
 }
 
+/*!======================================!*/
+/*! Fonction: traceGraph                 !*/
+/*! Rôle: Affiche la texture de la trace !*/
+/*! Paramètres:                          !*/
+/*!			E: int, int, struct Graph     !*/  
+/*!			S: N/A                       !*/
+/*! Retour: void                         !*/
+/*!======================================!*/
 void traceGraph(int x, int y, Graph graph) {
 
 	SDL_Rect trace;
@@ -115,6 +159,14 @@ void traceGraph(int x, int y, Graph graph) {
 	SDL_BlitSurface(graph.trace, NULL, graph.ecran, &trace);
 }
 
+/*!=======================================!*/
+/*! Fonction: sortieGraph                 !*/
+/*! Rôle: Affiche la texture de la sortie !*/
+/*! Paramètres:                           !*/
+/*!			E: int, int, struct Graph      !*/  
+/*!			S: N/A                        !*/
+/*! Retour: void                          !*/
+/*!=======================================!*/
 void sortieGraph(int x, int y, Graph graph) {
 
 	SDL_Rect sortie;
@@ -125,6 +177,14 @@ void sortieGraph(int x, int y, Graph graph) {
 	SDL_BlitSurface(graph.sortie, NULL, graph.ecran, &sortie);
 }
 
+/*!======================================!*/
+/*! Fonction: robotGraph                 !*/
+/*! Rôle: Affiche la texture du robot    !*/
+/*! Paramètres:                          !*/
+/*!			E: int, int, struct Graph     !*/  
+/*!			S: N/A                       !*/
+/*! Retour: void                         !*/
+/*!======================================!*/
 void robotGraph(int x, int y, Graph graph) {
 
 	SDL_Rect robot;
@@ -135,6 +195,14 @@ void robotGraph(int x, int y, Graph graph) {
 	SDL_BlitSurface(graph.robot, NULL, graph.ecran, &robot);
 }
 
+/*!=====================================================!*/
+/*! Fonction: affichageGraph                            !*/
+/*! Rôle: Remplacer et afficher les nouvelles textures  !*/
+/*! Paramètres:                                         !*/
+/*!			E: struct Robot, struct Carte, struct Graph !*/  
+/*!			S: N/A                                      !*/
+/*! Retour: void                                        !*/
+/*!=====================================================!*/
 void affichageGraph(Robot robot, Carte carte, Graph graph) {
 
 	for(int y = 0; y < carte.hauteur; ++y)	{
@@ -152,4 +220,23 @@ void affichageGraph(Robot robot, Carte carte, Graph graph) {
 	SDL_Flip(graph.ecran);
 	usleep(10000);
 
+}
+
+/*!===========================!*/
+/*! Fonction: adieu           !*/
+/*! Rôle: Message d'au revoir !*/
+/*! Paramètres:               !*/
+/*!			E: struct Robot   !*/  
+/*!			S: N/A            !*/
+/*! Retour: void              !*/
+/*!===========================!*/
+void adieu (Robot robot) {
+
+	printf("\t*******************************************\n");
+	printf("\t*      Vous êtes sortis du labyrinthe     *\n");
+	printf("\t*        Vous avez fais %lld pas           *\n", robot.nbPas);
+	printf("\t*             Au revoir                   *\n");
+	printf("\t*******************************************\n");
+
+	SDL_Quit();
 }
