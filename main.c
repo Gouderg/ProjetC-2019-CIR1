@@ -1,13 +1,12 @@
 #include "fonction.h"
 
-
 int main(int argc, char const *argv[])
 {
 	//Déclarations des variables
 	Carte carte;
 	Robot robot;
+	Graph graph;
 	char *nomFichier;
-	int fin = 0;
 
 	//Initialisation de la carte
 	nomFichier = malloc(TAILLE_NOM * sizeof(char));
@@ -18,16 +17,12 @@ int main(int argc, char const *argv[])
 	
 	//Initialisation du Robot
 	robot = findDepart(carte);
-	actualisationCarte(carte, robot);
 	robot.compteurPledge = 0;
+	
 
 	//Mise en marche du programme
-	fin = deplacement(&robot, carte);
+	menu(robot, carte, graph);
 
-	if(fin == 1) printf("Vous êtes sortie du labyrinthe en %lld pas\n", robot.nbPas);
-	if(fin == 0) printf("Ce labyrinthe n'a pas de sortie sur mon chemin\n");
-
-
-	
+	SDL_Quit();
 	return 0;
 }
