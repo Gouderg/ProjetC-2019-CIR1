@@ -1,3 +1,9 @@
+/*!=======================!*/
+/*! Auteur: Victor Illien !*/
+/*! Nom: main.c           !*/
+/*! Date: 21/06/19        !*/
+/*!=======================!*/ 
+
 #include "fonction.h"
 
 int main(int argc, char const *argv[])

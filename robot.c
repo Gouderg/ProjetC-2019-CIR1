@@ -1,3 +1,9 @@
+/*!=======================!*/
+/*! Auteur: Victor Illien !*/
+/*! Nom: robot.c          !*/
+/*! Date: 21/06/19        !*/
+/*!=======================!*/ 
+
 #include "fonction.h"
 
 /*!================================================!*/
@@ -73,11 +79,11 @@ char detecteCote(Robot *robot,  Carte carte) {
 /*! Fonction: avancer                                               !*/
 /*! Rôle: Avancer de une case en fonction de l'orientation du robot !*/ 
 /*! Paramètres:                                                     !*/
-/*!			E: struct *Robot, struct Carte, struct Graph, int       !*/  
+/*!			E: struct *Robot, struct Carte, struct Graph, int, char !*/  
 /*!			S: struct *Robot                                        !*/
 /*! Retour: void                                                    !*/
 /*!=================================================================!*/
-void avancer(Robot *robot, Carte carte, Graph graph, int choix1) {
+void avancer(Robot *robot, Carte carte, Graph graph, int choix1, char caracDevant) {
 
 	//On ramène la direction à une valeur positive compris entre 0 et 3
 	int cap = robot -> compteurPledge % 4;
@@ -92,7 +98,7 @@ void avancer(Robot *robot, Carte carte, Graph graph, int choix1) {
 	if(cap == SUD) robot -> y ++;
 	if(cap == OUEST) robot -> x --;
 
-	actualisationCarte(carte, *robot, graph, choix1);
+	actualisationCarte(carte, *robot, graph, choix1, caracDevant);
 	//On incrémente le compteur de pas
 	robot -> nbPas++;
 }
@@ -140,7 +146,7 @@ int deplacement(Robot *robot, Carte carte, Graph graph, int choix1) {
 	while((caracDevant = detecteDevant(*robot, carte)) != 'x') {
 
 		if (caracDevant == 'S') return fin = 1;
-		avancer(robot, carte, graph, choix1);
+		avancer(robot, carte, graph, choix1, caracDevant);
 	}
 	
 	droite(robot); //On tourne à droite
@@ -154,18 +160,18 @@ int deplacement(Robot *robot, Carte carte, Graph graph, int choix1) {
 		if(caracCote == 'S') return fin = 1;
 		
 		//S'il y a un mur à gauche et rien devant, on avance
-		else if(caracDevant == ' ' && caracCote == 'x') avancer(robot, carte, graph, choix1);
+		else if(caracDevant == ' ' && caracCote == 'x') avancer(robot, carte, graph, choix1, caracDevant);
 		
 		//S'il n'y a rien devant et rien à gauche, on tourne à gauche et on avance
 		else if(caracDevant == ' ' && caracCote == ' ') {
 			gauche(robot);
-			avancer(robot, carte, graph, choix1);
+			avancer(robot, carte, graph, choix1, caracDevant);
 		}
 
 		//S'il y a un mur devant et un mur à gauche, on tourne à droite et on avance
 		else if(caracDevant == 'x' && caracCote == 'x') {
 			droite(robot);
-			avancer(robot, carte, graph, choix1);
+			avancer(robot, carte, graph, choix1, caracDevant);
 		}
 
 	}while(robot -> compteurPledge != 0);

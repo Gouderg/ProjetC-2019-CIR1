@@ -1,5 +1,10 @@
-#include "fonction.h"
+/*!=======================!*/
+/*! Auteur: Victor Illien !*/
+/*! Nom: carte.c          !*/
+/*! Date: 21/06/19        !*/
+/*!=======================!*/ 
 
+#include "fonction.h"
 
 /*!==============================================!*/
 /*! Fonction: recupArg                           !*/
@@ -79,34 +84,41 @@ Carte initCarte(const char *nomFichier) {
 /*! Rôle: Parcours la carte intégralement        !*/
 /*!       Laisse un délai de 0.1 seconde         !*/
 /*! Paramètres:                                  !*/
-/*!			E: struct Carte, struct Robot        !*/  
+/*!			E: struct Carte, struct Robot, char  !*/  
 /*!			S: N/A                               !*/
 /*! Retour: void                                 !*/
 /*!==============================================!*/
-void affichCarte(Carte carte, Robot robot) {
+void affichCarte(Carte carte, Robot robot, char caracDevant) {
 
 	for (int i = 0; i < carte.hauteur; ++i)
 	{
+		printf("\t");
 		for (int j = 0; j < carte.largeur; ++j)
 		{
 			printf("%c", carte.tabCarte[i][j]);
 		}
 		printf("\n");
 	}
+
+	printf("\t*********************************\n");
+	printf("\t* Caractère devant le robot: %c *\n", caracDevant);
+	printf("\t* Nombre de pas effectué: %lld  *\n", robot.nbPas);
+	printf("\t* Compteur de Pledge: %d        *\n", robot.compteurPledge);
+	printf("\t*********************************\n");
 	//Délai de 0.1 seconde
-	usleep(10000);
+	usleep(30000);
 }
 
-/*!==========================================================!*/
-/*! Fonction: actualisationCarte                             !*/
-/*! Rôle: Remplace la dernière position de R par un .        !*/
-/*!       Choix entre le mode graphique et le mode terminal  !*/
-/*! Paramètres:                                              !*/
-/*!			E: struct Carte, struct Robot, struct Graph, int !*/  
-/*!			S: N/A                                           !*/
-/*! Retour: void                                             !*/
-/*!==========================================================!*/
-void actualisationCarte(Carte carte, Robot robot, Graph graph, int choix1) {
+/*!================================================================!*/
+/*! Fonction: actualisationCarte                                   !*/
+/*! Rôle: Remplace la dernière position de R par un .              !*/
+/*!       Choix entre le mode graphique et le mode terminal        !*/
+/*! Paramètres:                                                    !*/
+/*!			E: struct Carte, struct Robot, struct Graph, int, char !*/  
+/*!			S: N/A                                                 !*/
+/*! Retour: void                                                   !*/
+/*!================================================================!*/
+void actualisationCarte(Carte carte, Robot robot, Graph graph, int choix1, char caracDevant) {
 	
 	//On remplace l'ancien R par un . et affecte le nouveau R
 	carte.tabCarte[carte.robotY][carte.robotX] = '.';
@@ -114,7 +126,7 @@ void actualisationCarte(Carte carte, Robot robot, Graph graph, int choix1) {
 
 	system("clear");
 
-	if(choix1 == 1) affichCarte(carte, robot);
+	if(choix1 == 1) affichCarte(carte, robot, caracDevant);
 	else if(choix1 == 2) affichageGraph(robot, carte, graph);
 	
 

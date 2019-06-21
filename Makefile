@@ -1,5 +1,5 @@
 Robot.exe: main.o lib.a
-	gcc main.o lib.a -Wall -lSDL -lSDL_image -lm -o Robot.exe
+	gcc main.o lib.a -Wall -lSDL -lSDL_image -lSDL_mixer -o Robot.exe
 
 lib.a: robot.o carte.o graphique.o
 	ar rv lib.a robot.o carte.o graphique.o

@@ -1,9 +1,16 @@
+/*!=======================!*/
+/*! Auteur: Victor Illien !*/
+/*! Nom: fonction.h       !*/
+/*! Date: 21/06/19        !*/
+/*!=======================!*/ 
+
 #include <stdio.h>               //Directive du préprocesseur
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
 #include <SDL/SDL.h>
 #include <SDL/SDL_image.h>
+#include <SDL/SDL_mixer.h>
 
 
 #define TAILLE_MAX_LIGNE 200     //Taille maximale d'une ligne de notre .txt
@@ -30,19 +37,19 @@ typedef struct Robot {
 
 //Structure ayant gérant les graphismes
 typedef struct Graph {
-	SDL_Surface *ecran;          
-	SDL_Surface *sortie;		 
-	SDL_Surface *mur;
-	SDL_Surface *robot;
-	SDL_Surface *trace;
-
+	SDL_Surface *ecran;          //Fenêtre
+	SDL_Surface *sortie;		 //Pixel de la sortie
+	SDL_Surface *mur;			 //Pixel du mur
+	SDL_Surface *robot;          //Pixel du robot
+	SDL_Surface *trace;          //Pixel de la trace
+	Mix_Music *musique;          //Musique
 } Graph;
 
 //Fonction Carte
 char *recupArg(int const argc, char const **argv);
 Carte initCarte(const char *nomFichier);
-void affichCarte(Carte carte, Robot robot);
-void actualisationCarte(Carte carte, Robot robot, Graph graph, int choix1);
+void affichCarte(Carte carte, Robot robot, char caracDevant);
+void actualisationCarte(Carte carte, Robot robot, Graph graph, int choix1, char caracDevant);
 
 
 //Fonction Robot Pledge
@@ -50,18 +57,18 @@ Robot findDepart(Carte carte);
 int deplacement(Robot *robot, Carte carte, Graph graph, int choix1);
 char detecteDevant(Robot robot, Carte carte);
 char detecteCote(Robot *robot, Carte carte);
-void avancer(Robot *robot, Carte carte, Graph graph, int choix1);
+void avancer(Robot *robot, Carte carte, Graph graph, int choix1, char caracDevant);
 void droite(Robot *robot);
 void gauche(Robot *robot);
 
 
 //Fonction graphique
 void menu(Robot robot, Carte carte, Graph graph);
-void sousMenu(Robot robot, Carte carte, Graph graph, int choix1, int choix2);
 Graph initGraph(Carte carteGraphique);
 void affichageGraph(Robot robot, Carte carte, Graph graph);
 void murGraph(int x, int y, Graph graph);
 void sortieGraph(int x, int y, Graph graph);
 void traceGraph(int x, int y, Graph graph);
 void murGraph(int x, int y, Graph graph);
-void adieu (Robot robot);
+void adieu (Robot robot, Graph graph, int choix1);
+
