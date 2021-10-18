@@ -34,12 +34,12 @@ void menu(Robot robot, Carte carte, Graph graph) {
 	switch(choix1) {
 
 		case 1:
-			fin = deplacement(&robot, carte, graph, choix1);
+			fin = deplacementRecursif(&robot, carte, graph, choix1);
 			break;
 
 		case 2:
 			graph = initGraph(carte);
-			fin = deplacement(&robot, carte, graph, choix1);
+			fin = deplacementRecursif(&robot, carte, graph, choix1);
 			break;
 
 		default:
@@ -177,19 +177,19 @@ void robotGraph(int x, int y, Graph graph) {
 /*!			S: N/A                        !*/
 /*! Retour: void                          !*/
 /*!=======================================!*/
-/*void stopGraph(Robot robot, Graph graph) {
+void stopGraph(Robot robot, Graph graph) {
 
 	SDL_Event event;
 
 	SDL_WaitEvent(&event);
 	switch(event.type) {
 		case SDL_QUIT:
-			adieu(robot, graph);
+			adieu(robot, graph, 2);
 			break;
 	}
 
 
-}*/
+}
 
 
 /*!=====================================================!*/
@@ -216,7 +216,7 @@ void affichageGraph(Robot robot, Carte carte, Graph graph) {
 	}
 
 	SDL_Flip(graph.ecran);
-	usleep(45000);
+	usleep(30000);
 
 }
 

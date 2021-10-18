@@ -20,6 +20,8 @@ Robot findDepart(Carte carte) {
 	Robot robotInit;
 	char caracTemp;
 
+	robotInit.nbPas = 0;
+
 	//On parcours la carte jusqu'à trouver le bon caractère
 	for (int i = 0; i < carte.hauteur; ++i) {
 		for (int j = 0; j < carte.largeur; ++j)	{
@@ -179,6 +181,92 @@ int deplacement(Robot *robot, Carte carte, Graph graph, int choix1) {
 
 	//On effectue un appel récursif tant qu'on ne trouve pas la sortie
 	deplacement(robot, carte, graph, choix1);
+}
+
+
+
+
+char checkAround(Robot *robot,  Carte carte, int cote) {
+
+	char caracCote;
+	// Gauche.
+	if (cote == 1) {
+		gauche(robot);                            //On tourne à gauche
+		caracCote = detecteDevant(*robot, carte); //On regarde devant 
+		droite(robot);                            //On tourne à droite
+	} 
+	// Droite.
+	else {
+		droite(robot);                            //On tourne à droite
+		caracCote = detecteDevant(*robot, carte); //On regarde devant 
+		gauche(robot);                            //On tourne à gauche
+	}
+
+	return caracCote;
+}
+
+void reculer(Robot *robot, Carte carte, Graph graph, int choix1, char caracDevant) {
+
+	//On ramène la direction à une valeur positive compris entre 0 et 3
+	int cap = robot -> compteurPledge % 4;
+
+	//On conserve les coordonnées précédentes
+	carte.robotX = robot -> x;
+	carte.robotY = robot -> y;
+
+	//En fonction du cap, on avance d'une case
+	if(cap == NORD) robot -> y ++;
+	if(cap == EST) robot -> x --;
+	if(cap == SUD) robot -> y --;
+	if(cap == OUEST) robot -> x ++;
+
+	actualisationCarte(carte, *robot, graph, choix1, caracDevant);
+	//On incrémente le compteur de pas
+	robot -> nbPas++;
+}
+
+
+
+
+int deplacementRecursif(Robot *robot, Carte carte, Graph graph, int choix1) {
+	
+	// Si on trouve la sortie on revient.
+	if (checkAround(robot, carte, 1) == 'S' || checkAround(robot, carte, 2) == 'S' || detecteDevant(*robot, carte) == 'S') {
+		return 1;
+	}
+	// Si on est bloqué on revient.
+	if (checkAround(robot, carte, 1) != ' ' && checkAround(robot, carte, 2) != ' ' && detecteDevant(*robot, carte) && ' ') {
+		return 0;
+	}
+	// On va à droite.
+	char c = checkAround(robot, carte, 2);
+	if ( c == ' ') {
+		droite(robot);
+		avancer(robot, carte, graph, choix1, c);
+		if (deplacementRecursif(robot, carte, graph, choix1) == 1) return 1;
+		reculer(robot, carte, graph, choix1, c);
+		gauche(robot);
+	}
+
+	// On va en face.
+	c = detecteDevant(*robot, carte);
+	if ( c == ' ') {
+		avancer(robot, carte, graph, choix1, c);
+		if (deplacementRecursif(robot, carte, graph, choix1) == 1) return 1;
+		reculer(robot, carte, graph, choix1, c);
+	}
+
+	// On va à gauche.
+	c = checkAround(robot, carte, 1);
+	if ( c == ' ') {
+		gauche(robot);
+		avancer(robot, carte, graph, choix1, c);
+		if (deplacementRecursif(robot, carte, graph, choix1) == 1) return 1;
+		reculer(robot, carte, graph, choix1, c);
+		droite(robot);
+	}
+
+	return 0;
 
 }
 

@@ -61,6 +61,9 @@ void avancer(Robot *robot, Carte carte, Graph graph, int choix1, char caracDevan
 void droite(Robot *robot);
 void gauche(Robot *robot);
 
+int deplacementRecursif(Robot *robot, Carte carte, Graph graph, int choix1);
+char checkAround(Robot *robot,  Carte carte, int cote);
+void reculer(Robot *robot, Carte carte, Graph graph, int choix1, char caracDevant);
 
 //Fonction graphique
 void menu(Robot robot, Carte carte, Graph graph);
